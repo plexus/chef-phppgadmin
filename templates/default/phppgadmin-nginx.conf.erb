@@ -1,0 +1,20 @@
+ server {
+   listen          *:<%= node[:phppgadmin][:port] %>;
+   server_name     <%= node[:phppgadmin][:hostname] %>;
+   access_log      <%= node[:phppgadmin][:log_dir] %>/nginx.access.log;
+   error_log      <%= node[:phppgadmin][:log_dir] %>/nginx.error.log;
+   
+   location / {
+     root    /usr/share/phppgadmin;
+     index   index.html index.htm index.php;
+   }
+   
+   location ~ \.php$ {
+     root            /usr/share/phppgadmin;
+     fastcgi_pass    127.0.0.1:9000;
+     # fastcgi_pass    unix:/var/run/php-fpm/php-fpm.sock;
+     fastcgi_index   index.php;
+     fastcgi_param   SCRIPT_FILENAME  /usr/share/phppgadmin/$fastcgi_script_name;
+     include         fastcgi_params;
+   }
+ }
